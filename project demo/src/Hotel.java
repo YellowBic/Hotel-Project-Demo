@@ -1,5 +1,4 @@
 import java.util.*;
-
 public class Hotel {
 	private String HotelName ;
 	private Room[] roomArray = new Room[200];
@@ -18,6 +17,9 @@ public class Hotel {
 		}
 	}
 	//methods
+	/*ROOM ADDITION
+	*This method recieves as definition a Room object and registers it to the Room List 
+	*/
 	public void addRoom(Room i){
 		for(int j=0;j<=roomArray.length;j++){
 			if (roomArray[j]==null){
@@ -27,6 +29,11 @@ public class Hotel {
 			}
 		}
 	}
+	/*ROOM RECOVERY (Room)
+	*This method recieves as definition a Room Code (int) 
+	*It returns the respective Room object from the Room List
+	*If the Room doesn't exist it returns null 
+	*/
 	public Room returnRoomFromCode(int i){
 		for(int j=1;j<=roomArray.length;j++){
 			if (roomArray[j].getRoomCode()==i){
@@ -35,19 +42,26 @@ public class Hotel {
 		}
 		return null;
 	}
+	/*ROOM RECOVERY (Reservation)
+	*This method recieves as definition a Room Code (int) 
+	*It returns the respective Reservation object from the Reservation List
+	*If the Reservation doesn't exist it returns null 
+	*/
 	public Reservation returnReservationFromCode(int i){
-		for (int j=1;j<=reservationArray.size();j++){
-			try{
-				Reservation nr = reservationArray.get(j);
-				if (nr.getReservationCode()==i){
-					return nr;
-				}
-			}catch(IndexOutOfBoundsException ioobe){}
-			
+		for (int j=0;j<=reservationArray.size();j++){
+			Reservation nr = reservationArray.get(j);
+			if (nr.getReservationCode()==i){
+				return nr;
+			}
 		}
 		
 		return null;
 	}
+	/*REGISTER RESERVATION TO ROOM
+	*This method recieves as definition a Reservation object and a Room Code (int)
+	*It returns a boolean value that shows if there is or not a reservation
+	*
+	*/
 	public int addReservation(Reservation i){
 		int x = i.getPerson();
 		int initial;
@@ -107,25 +121,24 @@ public class Hotel {
 		System.out.println("The room you asked for does not  match your inputs,try again with another room \n");
 		return false;
 	}
+	/*CANCEL RESERVATION
+	*This method recieves as definition a Reservation Code (int)
+	*Uses the Room R
+	*/
 	public void cancelReservation(int i){
-		try{
-			if(returnReservationFromCode(i).getHotelRoom().cancel(i)==true){
-				returnReservationFromCode(i).getHotelRoom().cancel(i);
-				reservationArray.remove(returnReservationFromCode(i));
-				System.out.println("The reservation exists and has been cancelled");
-			}
-			else {
-				System.out.println("There is no reservation with that code");
-			}
-		}catch (NullPointerException npe){
-			System.out.println(npe.toString());
+		if(returnReservationFromCode(i).getHotelRoom().cancel(i)==true){
+			returnReservationFromCode(i).getHotelRoom().cancel(i);
+			reservationArray.remove(returnReservationFromCode(i));
+			System.out.println("The reservation exists and has been cancelled");
+		}
+		else {
+			System.out.println("There is no reservation with that code");
 		}
 	}
 	public double calculateIncome(int i){
 		if (returnRoomFromCode(i)!=null){
-			Room k = returnRoomFromCode(i);
-			System.out.println("The room's total income for the month is "+k.pricing());
-			return k.pricing();
+		Room k = returnRoomFromCode(i);
+		return k.pricing();
 		}
 		else{
 		return 0;
@@ -134,53 +147,39 @@ public class Hotel {
 	public double calculateIncome(){
 		double totalIncome=0;
 		for (int i=1;i<=roomArray.length;i++){
-			try{
-				totalIncome+=roomArray[i].pricing();
-				
-			}catch(NullPointerException npe){
-				
-			}catch(ArrayIndexOutOfBoundsException aioobe){
-				
-			}
+			totalIncome+=roomArray[i].pricing();
 		}
-		System.out.println("The total income of the hotel is "+totalIncome);
 		return totalIncome;
 	}
 	public void reservationPlan(){
 		char x;
 		System.out.println("Room  01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30");
-		for (int i=1;i<=roomArray.length+1;i++){
-			try{
-				for (int j=1;j<=roomArray[i].getAvailabilityArray().length+1;j++){
-					if (roomArray[i].getAvailability(j)!=null){
-						x = '*';
-						if(j==1){
-							System.out.print(+roomArray[i].getRoomCode()+" ");						
-						}
-						if (j==30){
-							System.out.println("  "+x);
-						}
-						else{
-							System.out.print("  "+x);
-						}	
+		for (int i=1;i<=roomArray.length;i++){
+			for (int j=1;j<=roomArray[i].getAvailabilityArray().length;j++){
+				if (roomArray[i].getAvailability(j)!=null){
+					x = '*';
+					if(j==1){
+						System.out.print(+roomArray[i].getRoomCode()+" ");						
+					}
+					if (j==30){
+						System.out.println("  "+x);
 					}
 					else{
-						x = '_';
-						if(j==1){
-							System.out.println(+roomArray[i].getRoomCode());
-						}
-						if(j==30){
-							System.out.println(x);
-						}
-						else{
-							System.out.print(x);
-						}
+						System.out.print("  "+x);
+					}	
+				}
+				else{
+					x = '_';
+					if(j==1){
+						System.out.println(+roomArray[i].getRoomCode());
+					}
+					if(j==30){
+						System.out.println(x);
+					}
+					else{
+						System.out.print(x);
 					}
 				}
-			}catch(NullPointerException npe){
-				
-			}catch(ArrayIndexOutOfBoundsException aioobe){
-				
 			}
 		}
 	}
